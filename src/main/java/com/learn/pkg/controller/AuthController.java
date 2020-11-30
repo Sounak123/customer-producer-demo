@@ -19,13 +19,13 @@ public class AuthController {
 
   @Autowired private PKUserDetailsService userDetailsService;
 
-  @Autowired private AuthService authservice;
+  @Autowired private AuthService authService;
 
   @PostMapping(value = "/authenticate")
   public ResponseEntity<String> createAuthenticationToken(
       @RequestBody JwtRequest authenticationRequest) {
 
-    authservice.authenticate(
+    authService.authenticate(
         authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
     final UserDetails userDetails =

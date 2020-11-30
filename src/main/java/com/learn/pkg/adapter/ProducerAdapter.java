@@ -15,6 +15,7 @@ import com.learn.pkg.util.MaskerUtils;
 @Component
 public class ProducerAdapter {
   private static final Logger logger = LoggerFactory.getLogger(ProducerAdapter.class);
+
   @Autowired private KafkaTemplate<String, Customer> kafkaTemplate;
 
   @Autowired private MaskerUtils masker;
