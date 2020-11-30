@@ -29,16 +29,16 @@ public class CustomerController {
   @Autowired private PublisherService service;
 
   @PostMapping("/add_customer_data")
-  public ResponseEntity<?> addCustomerData(
+  public ResponseEntity<ModelApiResponse> addCustomerData(
       @RequestHeader(value = "Authorization", required = true) String authorization,
       @RequestHeader(value = "activity-id", required = true) String activityId,
       @RequestHeader(value = "application-id", required = true) String applicationId,
       @Valid @RequestBody Customer customer) {
     String customerReqJson = masker.mask(customer);
-    logger.info("customer request:" + customerReqJson);
+    logger.info("customer request:{}", customerReqJson);
     ModelApiResponse response = service.publishCustomerData(customer);
-    logger.info("response:" + ObjectMapperUtil.getJsonFromObj(response));
+    logger.info("response:{}", ObjectMapperUtil.getJsonFromObj(response));
 
-    return new ResponseEntity<ModelApiResponse>(response, HttpStatus.OK);
+    return new ResponseEntity<>(response, HttpStatus.OK);
   }
 }

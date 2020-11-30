@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class PKUserDetailsService implements UserDetailsService {
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+  public UserDetails loadUserByUsername(String username) {
     if ("pkuser".equals(username)) {
       return new User(
           "pkuser",

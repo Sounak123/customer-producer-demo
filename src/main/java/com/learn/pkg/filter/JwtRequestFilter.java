@@ -54,11 +54,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         resolver.resolveException(
             request, response, null, new InvalidAuthenticationException("Unable to get JWT Token"));
       } catch (ExpiredJwtException e) {
-        // throw new InvalidAuthenticationException("JWT Token has expired");
         resolver.resolveException(
             request, response, null, new InvalidAuthenticationException("JWT Token has expired"));
       } catch (SignatureException e) {
-        // throw new InvalidAuthenticationException("Invalid JWT Token");
         resolver.resolveException(
             request, response, null, new InvalidAuthenticationException("Invalid JWT Token"));
       }

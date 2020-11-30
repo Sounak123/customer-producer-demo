@@ -22,7 +22,7 @@ public class CustomerControllerAdvice {
     ErrorResponse errorResponse = new ErrorResponse();
     errorResponse.setStatus(StatusEnum.ERROR);
     errorResponse.setMessage(ex.getMessage());
-    return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(TimeoutException.class)
@@ -32,7 +32,7 @@ public class CustomerControllerAdvice {
     errorResponse.setStatus(StatusEnum.ERROR);
     errorResponse.setMessage(ex.getMessage());
     errorResponse.setErrorType("Service has Timed Out");
-    return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.GATEWAY_TIMEOUT);
+    return new ResponseEntity<>(errorResponse, HttpStatus.GATEWAY_TIMEOUT);
   }
 
   @ExceptionHandler(InvalidAuthenticationException.class)
@@ -42,7 +42,7 @@ public class CustomerControllerAdvice {
     errorResponse.setStatus(StatusEnum.ERROR);
     errorResponse.setMessage(ex.getMessage());
     errorResponse.setErrorType("Authentication Exception");
-    return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.UNAUTHORIZED);
+    return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
   }
 
   @ExceptionHandler(UsernameNotFoundException.class)
@@ -52,7 +52,7 @@ public class CustomerControllerAdvice {
     errorResponse.setStatus(StatusEnum.ERROR);
     errorResponse.setMessage(ex.getMessage());
     errorResponse.setErrorType("User name not found");
-    return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.UNAUTHORIZED);
+    return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
   }
 
   @ExceptionHandler(AccessDeniedException.class)
@@ -62,6 +62,6 @@ public class CustomerControllerAdvice {
     errorResponse.setStatus(StatusEnum.ERROR);
     errorResponse.setMessage(ex.getMessage());
     errorResponse.setErrorType("Access Is Denied");
-    return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.UNAUTHORIZED);
+    return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
   }
 }

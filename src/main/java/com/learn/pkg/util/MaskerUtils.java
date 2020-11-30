@@ -10,7 +10,7 @@ import com.learn.pkg.model.CustomerAddress;
 
 @Component
 public class MaskerUtils {
-  private static final String mask = "****";
+  private static final String MASK = "****";
 
   public String mask(Customer customerObject) {
     Customer customer = new Customer();
@@ -29,9 +29,9 @@ public class MaskerUtils {
         customerObject
                 .getCustomerNumber()
                 .substring(0, customerObject.getCustomerNumber().length() - 4)
-            + mask); // Mask
+            + MASK); // Mask
     customer.setCustomerStatus(customerObject.getCustomerStatus());
-    customer.setEmail(mask + customerObject.getEmail().substring(4)); // Mask
+    customer.setEmail(MASK + customerObject.getEmail().substring(4)); // Mask
     customer.setFirstName(customerObject.getFirstName());
     customer.setLastName(customerObject.getLastName());
 
@@ -42,7 +42,7 @@ public class MaskerUtils {
       @NotNull
           @Pattern(
               regexp = "/^([0-2][0-9]|(3)[0-1]|(XX))(-)(((0)[0-9])|((1)[0-2])|(XX))(-)\\d{4}$/i")
-          String birthdate) { // TODO Auto-generated method stub
+          String birthdate) {
     return "XX-XX-" + birthdate.substring(6);
   }
 }

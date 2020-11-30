@@ -3,9 +3,8 @@ package com.learn.pkg.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.learn.pkg.model.JwtRequest;
@@ -22,8 +21,8 @@ public class AuthController {
 
   @Autowired private AuthService authservice;
 
-  @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-  public ResponseEntity<?> createAuthenticationToken(
+  @PostMapping(value = "/authenticate")
+  public ResponseEntity<String> createAuthenticationToken(
       @RequestBody JwtRequest authenticationRequest) {
 
     authservice.authenticate(

@@ -8,6 +8,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import com.learn.pkg.model.Customer;
+import com.learn.pkg.model.ModelApiResponse;
+import com.learn.pkg.model.ModelApiResponse.StatusEnum;
 import com.learn.pkg.util.MaskerUtils;
 
 @Component
@@ -20,8 +22,12 @@ public class ProducerAdapter {
   @Value("${cloudkarafka.topic}")
   private String topic;
 
-  public void send(Customer message) {
+  public ModelApiResponse send(Customer message) {
     this.kafkaTemplate.send(topic, message);
     logger.info("Sent data [" + masker.mask(message) + "] to " + topic);
+    ModelApiResponse mSuccess = new ModelApiResponse();
+    mSuccess.setMessage("Data Successfully Sent.");
+    mSuccess.setStatus(StatusEnum.SUCCESS);
+    return mSuccess;
   }
 }

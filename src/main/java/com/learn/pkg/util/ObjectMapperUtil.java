@@ -8,7 +8,11 @@ import com.learn.pkg.exception.ServiceException;
 
 public class ObjectMapperUtil {
 
-  public static String getJsonFromObj(Object obj) throws ServiceException {
+  private ObjectMapperUtil() {
+    throw new IllegalStateException("Utility class");
+  }
+
+  public static String getJsonFromObj(Object obj) {
     ObjectMapper objMapper = new ObjectMapper();
     try {
       return objMapper.writeValueAsString(obj);
