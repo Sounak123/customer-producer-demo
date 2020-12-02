@@ -32,7 +32,7 @@ public class CustomerController {
   public ResponseEntity<ModelApiResponse> addCustomerData(
       @RequestHeader(value = "Authorization", required = true) String authorization,
       @RequestHeader(value = "activity-id", required = true) String activityId,
-      @RequestHeader(value = "application-id", required = true) String applicationId,
+      @RequestHeader(value = "transaction-id", required = true) String transactionId,
       @Valid @RequestBody Customer customer) {
     String customerReqJson = ObjectMapperUtil.getJsonFromObj(masker.convert(customer));
     logger.info("customer request:{}", customerReqJson);

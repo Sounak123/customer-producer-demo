@@ -32,7 +32,7 @@ paths:
           in: "header"
           required: true
           type: "string"
-        - name: "application-id"
+        - name: "transaction-id"
           in: "header"
           required: true
           type: "string"
