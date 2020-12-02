@@ -1,29 +1,24 @@
-package com.learn.pkg.util;
+package com.learn.pkg.converter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learn.pkg.model.Customer;
 import com.learn.pkg.model.Customer.CustomerStatusEnum;
 import com.learn.pkg.model.CustomerAddress;
 
 @ExtendWith(MockitoExtension.class)
-public class MaskerUtilsTest {
+public class ObjectMaskerTest {
 
-  @InjectMocks private MaskerUtils masker;
+  @InjectMocks private ObjectMasker masker;
 
   @Test
-  public void testMask() throws JsonParseException, JsonMappingException, IOException {
-    Customer maskedData = mapFromJson(masker.mask(getCustomerData()), Customer.class);
+  public void testConvert() {
+    Customer maskedData = masker.convert(getCustomerData());
     assertEquals("C00000****", maskedData.getCustomerNumber());
     assertEquals("XX-XX-2010", maskedData.getBirthdate());
     assertEquals("XX-XX-2010", maskedData.getBirthdate());
@@ -46,17 +41,10 @@ public class MaskerUtilsTest {
     address.addressLine1("3/1 XYZ avenue,");
     address.addressLine2("Boston, USA");
     address.street("Storrow Dr road");
-    address.postalCode("02215");
+    address.postalCode("702215");
 
     c.address(address);
 
     return c;
-  }
-
-  protected <T> T mapFromJson(String json, Class<T> clazz)
-      throws JsonParseException, JsonMappingException, IOException {
-
-    ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(json, clazz);
   }
 }

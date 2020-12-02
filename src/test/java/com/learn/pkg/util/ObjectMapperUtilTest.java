@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.learn.pkg.converter.ObjectMaskerTest;
 
 @ExtendWith(MockitoExtension.class)
 public class ObjectMapperUtilTest {
@@ -16,9 +17,9 @@ public class ObjectMapperUtilTest {
 
   @Test
   public void testGetJsonFromObj() {
-    String strObj = ObjectMapperUtil.getJsonFromObj(MaskerUtilsTest.getCustomerData());
+    String strObj = ObjectMapperUtil.getJsonFromObj(ObjectMaskerTest.getCustomerData());
     assertEquals(
-        "{\"customerNumber\":\"C000000004\",\"firstName\":\"Ronald\",\"lastName\":\"Wesley\",\"birthdate\":\"26-12-2010\",\"country\":\"US\",\"countryCode\":null,\"mobileNumber\":\"9083618912\",\"email\":\"user@example.com\",\"customerStatus\":\"RESTORED\",\"address\":{\"addressLine1\":\"3/1 XYZ avenue,\",\"addressLine2\":\"Boston, USA\",\"street\":\"Storrow Dr road\",\"postalCode\":\"02215\"}}",
+        "{\"customerNumber\":\"C000000004\",\"firstName\":\"Ronald\",\"lastName\":\"Wesley\",\"birthdate\":\"26-12-2010\",\"country\":\"US\",\"countryCode\":null,\"mobileNumber\":\"9083618912\",\"email\":\"user@example.com\",\"customerStatus\":\"RESTORED\",\"address\":{\"addressLine1\":\"3/1 XYZ avenue,\",\"addressLine2\":\"Boston, USA\",\"street\":\"Storrow Dr road\",\"postalCode\":\"702215\"}}",
         strObj);
   }
 }

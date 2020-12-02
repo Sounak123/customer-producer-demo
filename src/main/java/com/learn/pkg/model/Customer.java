@@ -159,7 +159,7 @@ public class Customer {
    */
   @ApiModelProperty(example = "26-11-2010", required = true, value = "Format should be DD-MM-YYYY")
   @NotNull
-  @Pattern(regexp = "/^([0-2][0-9]|(3)[0-1]|(XX))(-)(((0)[0-9])|((1)[0-2])|(XX))(-)\\d{4}$/i")
+  @Pattern(regexp = "^([0-2][0-9]|(3)[0-1]|(XX))(-)(((0)[0-9])|((1)[0-2])|(XX))(-)\\d{4}$")
   public String getBirthdate() {
     return birthdate;
   }

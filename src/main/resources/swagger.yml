@@ -97,7 +97,7 @@ definitions:
         maxLength: 50
       birthdate:
         type: "string"
-        pattern: /^([0-2][0-9]|(3)[0-1]|(XX))(-)(((0)[0-9])|((1)[0-2])|(XX))(-)\d{4}$/i
+        pattern: ^([0-2][0-9]|(3)[0-1]|(XX))(-)(((0)[0-9])|((1)[0-2])|(XX))(-)\d{4}$
         example: "26-11-2010"
         description: "Format should be DD-MM-YYYY"
       country: 
@@ -141,7 +141,7 @@ definitions:
             example: "Storrow Dr road"
           postalCode:
             type: "string"
-            example: "02215"
+            example: "702215"
             minLength: 6
   ApiResponse:
     type: "object"
@@ -169,7 +169,7 @@ definitions:
           - "error"
       message:
         type: "string"
-      error_type:
+      errorType:
         type: "string"
 securityDefinitions:
   cust_auth:

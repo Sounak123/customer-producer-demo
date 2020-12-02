@@ -2,10 +2,10 @@ package com.learn.pkg.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-import org.apache.kafka.common.errors.TimeoutException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -14,26 +14,31 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learn.pkg.adapter.ProducerAdapter;
+import com.learn.pkg.converter.ObjectMasker;
 import com.learn.pkg.exception.CustomerControllerAdvice;
 import com.learn.pkg.model.Customer;
 import com.learn.pkg.model.Customer.CustomerStatusEnum;
 import com.learn.pkg.model.CustomerAddress;
 import com.learn.pkg.service.PublisherService;
 import com.learn.pkg.service.PublisherServiceImpl;
-import com.learn.pkg.util.MaskerUtils;
 
 @ExtendWith(MockitoExtension.class)
 public class CustomerControllerTest {
 
-  @Mock private KafkaTemplate<String, Customer> kafkaTemplate;
+  private static final String TEST_URI = "/v1/customers/add-customer-data";
+
+  @Mock(answer = Answers.RETURNS_MOCKS)
+  private KafkaTemplate<String, Customer> kafkaTemplate;
 
   @InjectMocks private CustomerController customerController = new CustomerController();
 
@@ -46,9 +51,9 @@ public class CustomerControllerTest {
     adapter = new ProducerAdapter();
     ReflectionTestUtils.setField(adapter, "topic", "xyz");
     ReflectionTestUtils.setField(adapter, "kafkaTemplate", kafkaTemplate);
-    ReflectionTestUtils.setField(adapter, "masker", new MaskerUtils());
+    ReflectionTestUtils.setField(adapter, "masker", new ObjectMasker());
     ReflectionTestUtils.setField(service, "producer", adapter);
-    ReflectionTestUtils.setField(customerController, "masker", new MaskerUtils());
+    ReflectionTestUtils.setField(customerController, "masker", new ObjectMasker());
     ReflectionTestUtils.setField(customerController, "service", service);
     MockitoAnnotations.initMocks(this);
     mockMvc =
@@ -62,7 +67,7 @@ public class CustomerControllerTest {
 
     mockMvc
         .perform(
-            post("/v1/customers/add_customer_data")
+            post(TEST_URI)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(getCustomerData())
                 .headers(buildHttpHeaders()))
@@ -72,17 +77,19 @@ public class CustomerControllerTest {
   @Test
   public void testAddCustomerDataFailure() throws Exception {
 
-    Mockito.when(kafkaTemplate.send(Mockito.anyString(), Mockito.any()))
-        .thenThrow(TimeoutException.class);
+    ListenableFuture<SendResult<String, Customer>> future = Mockito.mock(ListenableFuture.class);
+    Mockito.when(kafkaTemplate.send(Mockito.anyString(), Mockito.any())).thenReturn(future);
+
+    Mockito.doThrow(InterruptedException.class).when(future).get();
 
     ReflectionTestUtils.setField(adapter, "kafkaTemplate", kafkaTemplate);
     mockMvc
         .perform(
-            post("/v1/customers/add_customer_data")
+            post(TEST_URI)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(getCustomerData())
                 .headers(buildHttpHeaders()))
-        .andExpect(MockMvcResultMatchers.status().is(400));
+        .andExpect(MockMvcResultMatchers.status().is(503));
   }
 
   private String getCustomerData() throws JsonProcessingException {
@@ -92,7 +99,7 @@ public class CustomerControllerTest {
     c.setLastName("Wesley");
     c.setBirthdate("26-12-2010");
     c.setCountry("USA");
-    c.setCountry("US");
+    c.setCountryCode("US");
     c.setMobileNumber("9083618912");
     c.setEmail("user@example.com");
     c.customerStatus(CustomerStatusEnum.RESTORED);
@@ -101,7 +108,7 @@ public class CustomerControllerTest {
     address.addressLine1("3/1 XYZ avenue,");
     address.addressLine2("Boston, USA");
     address.street("Storrow Dr road");
-    address.postalCode("02215");
+    address.postalCode("702215");
 
     c.address(address);
 

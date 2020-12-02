@@ -51,7 +51,7 @@ public class ErrorResponse {
   @JsonProperty("message")
   private String message = null;
 
-  @JsonProperty("error_type")
+  @JsonProperty("errorType")
   private String errorType = null;
 
   public ErrorResponse status(StatusEnum status) {
