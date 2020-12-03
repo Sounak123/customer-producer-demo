@@ -2,6 +2,7 @@ package com.learn.pkg.exception;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.errors.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,5 +75,17 @@ public class CustomerControllerAdvice {
     errorResponse.setErrorType("Resource not found!");
     logger.error("Resource not found!: {}", ex.getMessage());
     return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(KafkaException.class)
+  public final ResponseEntity<ErrorResponse> handleException(
+      KafkaException ex, HttpServletRequest request) {
+
+    ErrorResponse errorResponse = new ErrorResponse();
+    errorResponse.setStatus(StatusEnum.ERROR);
+    errorResponse.setMessage(ex.getMessage());
+    errorResponse.setErrorType("Unable to process request");
+    logger.error("Unable to process request: {}", ex.getMessage());
+    return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
