@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Validated
 @javax.annotation.Generated(
     value = "io.swagger.codegen.languages.SpringCodegen",
-    date = "2020-11-26T09:43:13.274Z")
+    date = "2020-12-03T11:47:02.535Z")
 public class Customer {
   @JsonProperty("customerNumber")
   private String customerNumber = null;
@@ -159,7 +159,7 @@ public class Customer {
    */
   @ApiModelProperty(example = "26-11-2010", required = true, value = "Format should be DD-MM-YYYY")
   @NotNull
-  @Pattern(regexp = "^([0-2][0-9]|(3)[0-1]|(XX))(-)(((0)[0-9])|((1)[0-2])|(XX))(-)\\d{4}$")
+  @Pattern(regexp = "^([0-2][0-9]|(3)[0-1])(-)(((0)[0-9])|((1)[0-2])|)(-)\\d{4}$")
   public String getBirthdate() {
     return birthdate;
   }

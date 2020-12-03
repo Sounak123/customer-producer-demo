@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Validated
 @javax.annotation.Generated(
     value = "io.swagger.codegen.languages.SpringCodegen",
-    date = "2020-11-26T09:43:13.274Z")
+    date = "2020-12-03T11:47:02.535Z")
 public class ErrorResponse {
   /** Status of request */
   public enum StatusEnum {

@@ -12,12 +12,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import io.swagger.annotations.ApiModelProperty;
 
-/** ModelApiResponse */
+/** CustomerResponse */
 @Validated
 @javax.annotation.Generated(
     value = "io.swagger.codegen.languages.SpringCodegen",
-    date = "2020-11-26T09:43:13.274Z")
-public class ModelApiResponse {
+    date = "2020-12-03T11:47:02.535Z")
+public class CustomerResponse {
   /** Status of request */
   public enum StatusEnum {
     SUCCESS("success");
@@ -51,7 +51,7 @@ public class ModelApiResponse {
   @JsonProperty("message")
   private String message = null;
 
-  public ModelApiResponse status(StatusEnum status) {
+  public CustomerResponse status(StatusEnum status) {
     this.status = status;
     return this;
   }
@@ -71,7 +71,7 @@ public class ModelApiResponse {
     this.status = status;
   }
 
-  public ModelApiResponse message(String message) {
+  public CustomerResponse message(String message) {
     this.message = message;
     return this;
   }
@@ -99,9 +99,9 @@ public class ModelApiResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ModelApiResponse _apiResponse = (ModelApiResponse) o;
-    return Objects.equals(this.status, _apiResponse.status)
-        && Objects.equals(this.message, _apiResponse.message);
+    CustomerResponse customerResponse = (CustomerResponse) o;
+    return Objects.equals(this.status, customerResponse.status)
+        && Objects.equals(this.message, customerResponse.message);
   }
 
   @Override
@@ -112,7 +112,7 @@ public class ModelApiResponse {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ModelApiResponse {\n");
+    sb.append("class CustomerResponse {\n");
 
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");

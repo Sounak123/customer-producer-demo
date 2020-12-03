@@ -10,17 +10,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.learn.pkg.model.Customer;
 import com.learn.pkg.model.Customer.CustomerStatusEnum;
 import com.learn.pkg.model.CustomerAddress;
+import com.learn.pkg.model.kafka.KafkaCustomerDataRequest;
 
 @ExtendWith(MockitoExtension.class)
-public class ObjectMaskerTest {
+public class CustomerDataMaskerTest {
 
-  @InjectMocks private ObjectMasker masker;
+  @InjectMocks private CustomerDataMasker masker;
 
   @Test
   public void testConvert() {
-    Customer maskedData = masker.convert(getCustomerData());
+    KafkaCustomerDataRequest maskedData = masker.convert(getCustomerData());
     assertEquals("C00000****", maskedData.getCustomerNumber());
-    assertEquals("XX-XX-2010", maskedData.getBirthdate());
     assertEquals("XX-XX-2010", maskedData.getBirthdate());
     assertEquals("****@example.com", maskedData.getEmail());
   }

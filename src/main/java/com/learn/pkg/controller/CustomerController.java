@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.learn.pkg.converter.ObjectMasker;
+import com.learn.pkg.converter.CustomerDataMasker;
 import com.learn.pkg.model.Customer;
-import com.learn.pkg.model.ModelApiResponse;
+import com.learn.pkg.model.CustomerResponse;
 import com.learn.pkg.service.PublisherService;
 import com.learn.pkg.util.ObjectMapperUtil;
 
@@ -24,19 +24,19 @@ import com.learn.pkg.util.ObjectMapperUtil;
 public class CustomerController {
   private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
-  @Autowired private ObjectMasker masker;
+  @Autowired private CustomerDataMasker masker;
 
   @Autowired private PublisherService service;
 
   @PostMapping("/add-customer-data")
-  public ResponseEntity<ModelApiResponse> addCustomerData(
+  public ResponseEntity<CustomerResponse> addCustomerData(
       @RequestHeader(value = "Authorization", required = true) String authorization,
       @RequestHeader(value = "activity-id", required = true) String activityId,
       @RequestHeader(value = "transaction-id", required = true) String transactionId,
       @Valid @RequestBody Customer customer) {
     String customerReqJson = ObjectMapperUtil.getJsonFromObj(masker.convert(customer));
     logger.info("customer request:{}", customerReqJson);
-    ModelApiResponse response = service.publishCustomerData(customer);
+    CustomerResponse response = service.publishCustomerData(customer, transactionId);
     logger.info("response:{}", ObjectMapperUtil.getJsonFromObj(response));
 
     return new ResponseEntity<>(response, HttpStatus.OK);

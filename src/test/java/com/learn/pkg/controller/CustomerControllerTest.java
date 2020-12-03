@@ -24,11 +24,12 @@ import org.springframework.util.concurrent.ListenableFuture;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learn.pkg.adapter.ProducerAdapter;
-import com.learn.pkg.converter.ObjectMasker;
+import com.learn.pkg.converter.CustomerDataMasker;
 import com.learn.pkg.exception.CustomerControllerAdvice;
 import com.learn.pkg.model.Customer;
 import com.learn.pkg.model.Customer.CustomerStatusEnum;
 import com.learn.pkg.model.CustomerAddress;
+import com.learn.pkg.model.kafka.KafkaCustomerDataRequest;
 import com.learn.pkg.service.PublisherService;
 import com.learn.pkg.service.PublisherServiceImpl;
 
@@ -38,7 +39,7 @@ public class CustomerControllerTest {
   private static final String TEST_URI = "/v1/customers/add-customer-data";
 
   @Mock(answer = Answers.RETURNS_MOCKS)
-  private KafkaTemplate<String, Customer> kafkaTemplate;
+  private KafkaTemplate<String, KafkaCustomerDataRequest> kafkaTemplate;
 
   @InjectMocks private CustomerController customerController = new CustomerController();
 
@@ -51,9 +52,9 @@ public class CustomerControllerTest {
     adapter = new ProducerAdapter();
     ReflectionTestUtils.setField(adapter, "topic", "xyz");
     ReflectionTestUtils.setField(adapter, "kafkaTemplate", kafkaTemplate);
-    ReflectionTestUtils.setField(adapter, "masker", new ObjectMasker());
+    ReflectionTestUtils.setField(adapter, "masker", new CustomerDataMasker());
     ReflectionTestUtils.setField(service, "producer", adapter);
-    ReflectionTestUtils.setField(customerController, "masker", new ObjectMasker());
+    ReflectionTestUtils.setField(customerController, "masker", new CustomerDataMasker());
     ReflectionTestUtils.setField(customerController, "service", service);
     MockitoAnnotations.initMocks(this);
     mockMvc =
@@ -77,8 +78,10 @@ public class CustomerControllerTest {
   @Test
   public void testAddCustomerDataFailure() throws Exception {
 
-    ListenableFuture<SendResult<String, Customer>> future = Mockito.mock(ListenableFuture.class);
-    Mockito.when(kafkaTemplate.send(Mockito.anyString(), Mockito.any())).thenReturn(future);
+    ListenableFuture<SendResult<String, KafkaCustomerDataRequest>> future =
+        Mockito.mock(ListenableFuture.class);
+    Mockito.when(kafkaTemplate.send(Mockito.anyString(), Mockito.anyString(), Mockito.any()))
+        .thenReturn(future);
 
     Mockito.doThrow(InterruptedException.class).when(future).get();
 
@@ -119,8 +122,8 @@ public class CustomerControllerTest {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Content-Type", "application/json");
     headers.set("Authorization", "bearer 5b2713db-00a8-491d-ae72-3b9f5fafa6ba");
-    headers.set("Activity-Id", "customer-transaction");
-    headers.set("Application-Id", "customer-producer-demo");
+    headers.set("activity-Id", "customer-transaction");
+    headers.set("transaction-Id", "customer-producer-demo");
     return headers;
   }
 
