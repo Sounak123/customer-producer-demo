@@ -14,36 +14,36 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import com.learn.pkg.converter.CustomerDataMasker;
 import com.learn.pkg.exception.ServiceException;
-import com.learn.pkg.model.Customer;
 import com.learn.pkg.model.CustomerResponse;
 import com.learn.pkg.model.CustomerResponse.StatusEnum;
 import com.learn.pkg.model.kafka.KafkaCustomerDataRequest;
+import com.learn.pkg.model.kafka.PublisherRequest;
 import com.learn.pkg.util.ObjectMapperUtil;
 
 @Component
 public class ProducerAdapter {
   private static final Logger logger = LoggerFactory.getLogger(ProducerAdapter.class);
 
-  @Autowired private KafkaTemplate<String, KafkaCustomerDataRequest> kafkaTemplate;
+  @Autowired private KafkaTemplate<String, PublisherRequest> kafkaTemplate;
 
-  @Autowired private CustomerDataMasker masker;
+  @Autowired private CustomerDataMasker customerPublisherDataMasker;
 
   @Value("${cloudkarafka.topic}")
   private String topic;
 
-  public CustomerResponse send(Customer message, String transactionId) {
+  public CustomerResponse send(PublisherRequest message) {
 
-    KafkaCustomerDataRequest data = masker.convert(message);
+    KafkaCustomerDataRequest data = customerPublisherDataMasker.convert(message.getCustomerData());
 
-    ListenableFuture<SendResult<String, KafkaCustomerDataRequest>> future =
-        this.kafkaTemplate.send(topic, transactionId, data);
+    ListenableFuture<SendResult<String, PublisherRequest>> future =
+        this.kafkaTemplate.send(topic, message);
 
     future.addCallback(
-        new ListenableFutureCallback<SendResult<String, KafkaCustomerDataRequest>>() {
+        new ListenableFutureCallback<SendResult<String, PublisherRequest>>() {
 
           @Override
-          public void onSuccess(SendResult<String, KafkaCustomerDataRequest> result) {
-            logger.info("Sent data [" + ObjectMapperUtil.getJsonFromObj(data) + "] to " + topic);
+          public void onSuccess(SendResult<String, PublisherRequest> result) {
+            logger.info("Sent data [{}] to topic:{}", ObjectMapperUtil.getJsonFromObj(data), topic);
           }
 
           @Override
@@ -53,12 +53,16 @@ public class ProducerAdapter {
         });
     try {
       future.get();
-      CustomerResponse mSuccess = new CustomerResponse();
-      mSuccess.setMessage("Data Successfully Sent.");
-      mSuccess.setStatus(StatusEnum.SUCCESS);
-      return mSuccess;
+      return successResponse();
     } catch (InterruptedException | ExecutionException e) {
       throw new ServiceException(e.getMessage());
     }
+  }
+
+  private CustomerResponse successResponse() {
+    CustomerResponse customerResponse = new CustomerResponse();
+    customerResponse.setMessage("Data Successfully Sent.");
+    customerResponse.setStatus(StatusEnum.SUCCESS);
+    return customerResponse;
   }
 }

@@ -24,12 +24,13 @@ import org.springframework.util.concurrent.ListenableFuture;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learn.pkg.adapter.ProducerAdapter;
+import com.learn.pkg.converter.CustomerDataConverter;
 import com.learn.pkg.converter.CustomerDataMasker;
 import com.learn.pkg.exception.CustomerControllerAdvice;
 import com.learn.pkg.model.Customer;
 import com.learn.pkg.model.Customer.CustomerStatusEnum;
 import com.learn.pkg.model.CustomerAddress;
-import com.learn.pkg.model.kafka.KafkaCustomerDataRequest;
+import com.learn.pkg.model.kafka.PublisherRequest;
 import com.learn.pkg.service.PublisherService;
 import com.learn.pkg.service.PublisherServiceImpl;
 
@@ -39,7 +40,7 @@ public class CustomerControllerTest {
   private static final String TEST_URI = "/v1/customers/add-customer-data";
 
   @Mock(answer = Answers.RETURNS_MOCKS)
-  private KafkaTemplate<String, KafkaCustomerDataRequest> kafkaTemplate;
+  private KafkaTemplate<String, PublisherRequest> kafkaTemplate;
 
   @InjectMocks private CustomerController customerController = new CustomerController();
 
@@ -50,12 +51,16 @@ public class CustomerControllerTest {
   public void init() {
     PublisherService service = new PublisherServiceImpl();
     adapter = new ProducerAdapter();
+    CustomerDataMasker masker = new CustomerDataMasker();
+    ReflectionTestUtils.setField(masker, "customerDataConverter", new CustomerDataConverter());
     ReflectionTestUtils.setField(adapter, "topic", "xyz");
     ReflectionTestUtils.setField(adapter, "kafkaTemplate", kafkaTemplate);
-    ReflectionTestUtils.setField(adapter, "masker", new CustomerDataMasker());
+    ReflectionTestUtils.setField(adapter, "customerPublisherDataMasker", masker);
     ReflectionTestUtils.setField(service, "producer", adapter);
-    ReflectionTestUtils.setField(customerController, "masker", new CustomerDataMasker());
+    ReflectionTestUtils.setField(customerController, "customerPublisherDataMasker", masker);
     ReflectionTestUtils.setField(customerController, "service", service);
+    ReflectionTestUtils.setField(
+        customerController, "customePublisherDataConverter", new CustomerDataConverter());
     MockitoAnnotations.initMocks(this);
     mockMvc =
         MockMvcBuilders.standaloneSetup(customerController)
@@ -78,10 +83,9 @@ public class CustomerControllerTest {
   @Test
   public void testAddCustomerDataFailure() throws Exception {
 
-    ListenableFuture<SendResult<String, KafkaCustomerDataRequest>> future =
+    ListenableFuture<SendResult<String, PublisherRequest>> future =
         Mockito.mock(ListenableFuture.class);
-    Mockito.when(kafkaTemplate.send(Mockito.anyString(), Mockito.anyString(), Mockito.any()))
-        .thenReturn(future);
+    Mockito.when(kafkaTemplate.send(Mockito.anyString(), Mockito.any())).thenReturn(future);
 
     Mockito.doThrow(InterruptedException.class).when(future).get();
 

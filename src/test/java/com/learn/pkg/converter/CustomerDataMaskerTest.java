@@ -2,10 +2,12 @@ package com.learn.pkg.converter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.learn.pkg.model.Customer;
 import com.learn.pkg.model.Customer.CustomerStatusEnum;
@@ -15,11 +17,18 @@ import com.learn.pkg.model.kafka.KafkaCustomerDataRequest;
 @ExtendWith(MockitoExtension.class)
 public class CustomerDataMaskerTest {
 
-  @InjectMocks private CustomerDataMasker masker;
+  @InjectMocks private CustomerDataMasker customerPublisherDataMasker;
+
+  @BeforeEach
+  public void init() {
+    CustomerDataConverter customerDataConverter = new CustomerDataConverter();
+    ReflectionTestUtils.setField(
+        customerPublisherDataMasker, "customerDataConverter", customerDataConverter);
+  }
 
   @Test
   public void testConvert() {
-    KafkaCustomerDataRequest maskedData = masker.convert(getCustomerData());
+    KafkaCustomerDataRequest maskedData = customerPublisherDataMasker.convert(getCustomerData());
     assertEquals("C00000****", maskedData.getCustomerNumber());
     assertEquals("XX-XX-2010", maskedData.getBirthdate());
     assertEquals("****@example.com", maskedData.getEmail());

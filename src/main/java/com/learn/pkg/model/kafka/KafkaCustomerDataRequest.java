@@ -12,6 +12,8 @@ public class KafkaCustomerDataRequest {
   private String customerStatus;
   private KafkaCustomerAddress address;
 
+  public KafkaCustomerDataRequest() {}
+
   public String getCustomerNumber() {
     return customerNumber;
   }
@@ -90,5 +92,18 @@ public class KafkaCustomerDataRequest {
 
   public void setAddress(KafkaCustomerAddress address) {
     this.address = address;
+  }
+
+  public KafkaCustomerDataRequest(KafkaCustomerDataRequest request) {
+    this.customerNumber = request.customerNumber;
+    this.firstName = request.firstName;
+    this.lastName = request.lastName;
+    this.birthdate = request.birthdate;
+    this.country = request.country;
+    this.countryCode = request.countryCode;
+    this.mobileNumber = request.mobileNumber;
+    this.email = request.email;
+    this.customerStatus = request.customerStatus;
+    this.address = request.address;
   }
 }
