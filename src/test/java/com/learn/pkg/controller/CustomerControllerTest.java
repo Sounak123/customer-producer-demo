@@ -47,6 +47,8 @@ public class CustomerControllerTest {
   private MockMvc mockMvc;
   private ProducerAdapter adapter;
 
+  @Mock private CustomerDataMasker masker;
+
   @BeforeEach
   public void init() {
     PublisherService service = new PublisherServiceImpl();
@@ -100,16 +102,16 @@ public class CustomerControllerTest {
   }
 
   private String getCustomerData() throws JsonProcessingException {
-    Customer c = new Customer();
-    c.setCustomerNumber("C000000004");
-    c.setFirstName("Ronald");
-    c.setLastName("Wesley");
-    c.setBirthdate("26-12-2010");
-    c.setCountry("USA");
-    c.setCountryCode("US");
-    c.setMobileNumber("9083618912");
-    c.setEmail("user@example.com");
-    c.customerStatus(CustomerStatusEnum.RESTORED);
+    Customer customer = new Customer();
+    customer.setCustomerNumber("C000000004");
+    customer.setFirstName("Ronald");
+    customer.setLastName("Wesley");
+    customer.setBirthdate("26-12-2010");
+    customer.setCountry("USA");
+    customer.setCountryCode("US");
+    customer.setMobileNumber("9083618912");
+    customer.setEmail("user@example.com");
+    customer.customerStatus(CustomerStatusEnum.RESTORED);
 
     CustomerAddress address = new CustomerAddress();
     address.addressLine1("3/1 XYZ avenue,");
@@ -117,9 +119,9 @@ public class CustomerControllerTest {
     address.street("Storrow Dr road");
     address.postalCode("702215");
 
-    c.address(address);
+    customer.address(address);
 
-    return mapToJson(c);
+    return mapToJson(customer);
   }
 
   private HttpHeaders buildHttpHeaders() {
