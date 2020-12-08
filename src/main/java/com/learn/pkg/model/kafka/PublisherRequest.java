@@ -5,6 +5,8 @@ public class PublisherRequest {
   private String transactionId;
   private String activityId;
 
+  public PublisherRequest() {}
+
   public PublisherRequest(
       KafkaCustomerDataRequest customerData, String transactionId, String activityId) {
     this.customerData = customerData;

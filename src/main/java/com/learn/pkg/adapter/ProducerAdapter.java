@@ -1,7 +1,6 @@
 package com.learn.pkg.adapter;
 
-import java.util.concurrent.ExecutionException;
-
+import org.apache.kafka.common.errors.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +34,7 @@ public class ProducerAdapter {
 
     KafkaCustomerDataRequest data = customerPublisherDataMasker.convert(message.getCustomerData());
 
-    ListenableFuture<SendResult<String, PublisherRequest>> future =
-        this.kafkaTemplate.send(topic, message);
-
-    future.addCallback(
+    ListenableFutureCallback<SendResult<String, PublisherRequest>> listenableFutureCallback =
         new ListenableFutureCallback<SendResult<String, PublisherRequest>>() {
 
           @Override
@@ -49,14 +45,34 @@ public class ProducerAdapter {
           @Override
           public void onFailure(Throwable ex) {
             logger.error("Failed to send data");
+            throw new TimeoutException(ex.getMessage());
           }
-        });
+        };
     try {
+      ListenableFuture<SendResult<String, PublisherRequest>> future =
+          this.kafkaTemplate.send(topic, message);
+      future.addCallback(listenableFutureCallback);
+
+      kafkaTemplate.flush();
+      return successResponse();
+    } catch (TimeoutException e) {
+      throw new ServiceException(e.getMessage());
+    }
+    /*try {
       future.get();
       return successResponse();
     } catch (InterruptedException | ExecutionException e) {
       throw new ServiceException(e.getMessage());
     }
+
+    try {
+      this.kafkaTemplate.send(topic, message);
+      logger.info("Sent data [{}] to topic:{}", ObjectMapperUtil.getJsonFromObj(data), topic);
+      return successResponse();
+    } catch (TimeoutException e) {
+      logger.error("Failed to send data");
+      throw new ServiceException(e.getMessage());
+    }*/
   }
 
   private CustomerResponse successResponse() {

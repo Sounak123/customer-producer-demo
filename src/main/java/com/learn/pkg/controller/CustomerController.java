@@ -18,6 +18,7 @@ import com.learn.pkg.converter.CustomerDataMasker;
 import com.learn.pkg.model.Customer;
 import com.learn.pkg.model.CustomerResponse;
 import com.learn.pkg.model.kafka.KafkaCustomerDataRequest;
+import com.learn.pkg.model.kafka.PublisherRequest;
 import com.learn.pkg.service.PublisherService;
 import com.learn.pkg.util.ObjectMapperUtil;
 
@@ -40,11 +41,11 @@ public class CustomerController {
       @Valid @RequestBody Customer customer) {
     String customerReqJson =
         ObjectMapperUtil.getJsonFromObj(customerPublisherDataMasker.convert(customer));
-    KafkaCustomerDataRequest customerPublisherRequest =
-        customePublisherDataConverter.convert(customer);
+    KafkaCustomerDataRequest customerRequest = customePublisherDataConverter.convert(customer);
     logger.info("customer request:{}", customerReqJson);
-    CustomerResponse response =
-        service.publishCustomerData(customerPublisherRequest, transactionId, activityId);
+    PublisherRequest customerPublisherRequest =
+        new PublisherRequest(customerRequest, transactionId, activityId);
+    CustomerResponse response = service.publishCustomerData(customerPublisherRequest);
     logger.info("response:{}", ObjectMapperUtil.getJsonFromObj(response));
 
     return new ResponseEntity<>(response, HttpStatus.OK);

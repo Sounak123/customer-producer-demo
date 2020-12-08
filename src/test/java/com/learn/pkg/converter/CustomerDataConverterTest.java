@@ -1,13 +1,11 @@
 package com.learn.pkg.converter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -17,12 +15,9 @@ import com.learn.pkg.model.CustomerAddress;
 import com.learn.pkg.model.kafka.KafkaCustomerDataRequest;
 
 @ExtendWith(MockitoExtension.class)
-public class CustomerDataMaskerTest {
+public class CustomerDataConverterTest {
 
-  @InjectMocks private CustomerDataMasker customerPublisherDataMasker;
-
-  @Mock(answer = Answers.CALLS_REAL_METHODS)
-  private CustomerDataConverter customerDataConverter;
+  @InjectMocks private CustomerDataConverter customerDataConverter;
 
   @Before
   public void init() {
@@ -31,10 +26,8 @@ public class CustomerDataMaskerTest {
 
   @Test
   public void testConvert() {
-    KafkaCustomerDataRequest maskedData = customerPublisherDataMasker.convert(getCustomerData());
-    assertEquals("C00000****", maskedData.getCustomerNumber());
-    assertEquals("XX-XX-2010", maskedData.getBirthdate());
-    assertEquals("****@example.com", maskedData.getEmail());
+    KafkaCustomerDataRequest customerData = customerDataConverter.convert(getCustomerData());
+    assertEquals("C000000004", customerData.getCustomerNumber());
   }
 
   public static Customer getCustomerData() {
