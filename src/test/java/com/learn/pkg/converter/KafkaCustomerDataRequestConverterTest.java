@@ -17,9 +17,9 @@ import com.learn.pkg.model.CustomerAddress;
 import com.learn.pkg.model.kafka.KafkaCustomerDataRequest;
 
 @ExtendWith(MockitoExtension.class)
-public class CustomerDataMaskerTest {
+public class KafkaCustomerDataRequestConverterTest {
 
-  @InjectMocks private CustomerDataMasker customerPublisherDataMasker;
+  @InjectMocks private KafkaCustomerDataRequestConverter customerPublisherDataMasker;
 
   @Mock(answer = Answers.CALLS_REAL_METHODS)
   private CustomerDataConverter customerDataConverter;

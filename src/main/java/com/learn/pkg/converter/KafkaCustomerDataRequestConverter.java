@@ -8,7 +8,7 @@ import com.learn.pkg.model.Customer;
 import com.learn.pkg.model.kafka.KafkaCustomerDataRequest;
 
 @Component
-public class CustomerDataMasker implements Converter<Customer, KafkaCustomerDataRequest> {
+public class KafkaCustomerDataRequestConverter implements Converter<Customer, KafkaCustomerDataRequest> {
 
   @Autowired CustomerDataConverter customerDataConverter;
 

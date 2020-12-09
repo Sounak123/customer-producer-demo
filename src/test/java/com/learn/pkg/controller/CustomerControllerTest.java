@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learn.pkg.converter.CustomerDataConverter;
-import com.learn.pkg.converter.CustomerDataMasker;
+import com.learn.pkg.converter.KafkaCustomerDataRequestConverter;
 import com.learn.pkg.exception.CustomerControllerAdvice;
 import com.learn.pkg.model.Customer;
 import com.learn.pkg.model.Customer.CustomerStatusEnum;
@@ -31,7 +31,7 @@ public class CustomerControllerTest {
 
   @InjectMocks private CustomerController customerController;
 
-  @Mock private CustomerDataMasker customerPublisherDataMasker;
+  @Mock private KafkaCustomerDataRequestConverter customerPublisherDataMasker;
 
   @Mock private CustomerDataConverter customePublisherDataConverter;
 

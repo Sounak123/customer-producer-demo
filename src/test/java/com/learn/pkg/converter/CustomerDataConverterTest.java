@@ -24,7 +24,7 @@ public class CustomerDataConverterTest {
   @Test
   public void testConvert() {
     KafkaCustomerDataRequest customerData =
-        customerDataConverter.convert(CustomerDataMaskerTest.getCustomerData());
+        customerDataConverter.convert(KafkaCustomerDataRequestConverterTest.getCustomerData());
     assertEquals("C000000004", customerData.getCustomerNumber());
   }
 }

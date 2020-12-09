@@ -18,23 +18,11 @@ public class PublisherRequest {
     return customerData;
   }
 
-  public void setCustomerData(KafkaCustomerDataRequest customerData) {
-    this.customerData = customerData;
-  }
-
   public String getTransactionId() {
     return transactionId;
   }
 
-  public void setTransactionId(String transactionId) {
-    this.transactionId = transactionId;
-  }
-
   public String getActivityId() {
     return activityId;
-  }
-
-  public void setActivityId(String activityId) {
-    this.activityId = activityId;
   }
 }

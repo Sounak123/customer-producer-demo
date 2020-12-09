@@ -1,5 +1,6 @@
 package com.learn.pkg.adapter;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.kafka.common.errors.TimeoutException;
@@ -15,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import com.learn.pkg.converter.CustomerDataConverter;
-import com.learn.pkg.converter.CustomerDataMasker;
+import com.learn.pkg.converter.KafkaCustomerDataRequestConverter;
 import com.learn.pkg.exception.ServiceException;
 import com.learn.pkg.model.Customer;
 import com.learn.pkg.model.Customer.CustomerStatusEnum;
@@ -31,7 +32,7 @@ public class ProducerAdapterTest {
   @Mock(answer = Answers.RETURNS_MOCKS)
   private KafkaTemplate<String, PublisherRequest> kafkaTemplate;
 
-  @Mock private CustomerDataMasker customerPublisherDataMasker;
+  @Mock private KafkaCustomerDataRequestConverter customerPublisherDataMasker;
 
   @Before
   public void init() {
@@ -49,11 +50,13 @@ public class ProducerAdapterTest {
     Mockito.doThrow(new TimeoutException("Timed out!"))
         .when(kafkaTemplate)
         .send(Mockito.any(), Mockito.any());
-    try {
-      producerAdapter.send(getCustomerPublisherData());
-    } catch (ServiceException ex) {
-      assertEquals("Timed out!", ex.getMessage());
-    }
+
+    assertThatExceptionOfType(ServiceException.class)
+        .isThrownBy(
+            () -> {
+              producerAdapter.send(getCustomerPublisherData());
+            })
+        .withMessage("Timed out!");
   }
 
   private PublisherRequest getCustomerPublisherData() {

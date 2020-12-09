@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.learn.pkg.converter.CustomerDataConverter;
-import com.learn.pkg.converter.CustomerDataMasker;
+import com.learn.pkg.converter.KafkaCustomerDataRequestConverter;
 import com.learn.pkg.model.Customer;
 import com.learn.pkg.model.CustomerResponse;
 import com.learn.pkg.model.kafka.KafkaCustomerDataRequest;
@@ -27,7 +27,7 @@ import com.learn.pkg.util.ObjectMapperUtil;
 public class CustomerController {
   private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
-  @Autowired private CustomerDataMasker customerPublisherDataMasker;
+  @Autowired private KafkaCustomerDataRequestConverter customerPublisherDataMasker;
 
   @Autowired private CustomerDataConverter customePublisherDataConverter;
 

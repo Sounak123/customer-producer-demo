@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
-import com.learn.pkg.converter.CustomerDataMasker;
+import com.learn.pkg.converter.KafkaCustomerDataRequestConverter;
 import com.learn.pkg.exception.ServiceException;
 import com.learn.pkg.model.CustomerResponse;
 import com.learn.pkg.model.CustomerResponse.StatusEnum;
@@ -25,7 +25,7 @@ public class ProducerAdapter {
 
   @Autowired private KafkaTemplate<String, PublisherRequest> kafkaTemplate;
 
-  @Autowired private CustomerDataMasker customerPublisherDataMasker;
+  @Autowired private KafkaCustomerDataRequestConverter customerPublisherDataMasker;
 
   @Value("${cloudkarafka.topic}")
   private String topic;

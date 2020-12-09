@@ -1,5 +1,6 @@
 package com.learn.pkg.service;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
@@ -51,11 +52,12 @@ public class PublisherServiceImplTest {
     ServiceException ex = new ServiceException("Failed to execute operation");
     Mockito.doThrow(ex).when(producer).send(Mockito.any());
 
-    try {
-      publisherService.publishCustomerData(getCustomerPublisherData());
-    } catch (ServiceException e) {
-      assertEquals("Failed to execute operation", e.getMessage());
-    }
+    assertThatExceptionOfType(ServiceException.class)
+        .isThrownBy(
+            () -> {
+              publisherService.publishCustomerData(getCustomerPublisherData());
+            })
+        .withMessage("Failed to execute operation");
   }
 
   private PublisherRequest getCustomerPublisherData() {
