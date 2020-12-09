@@ -58,21 +58,6 @@ public class ProducerAdapter {
     } catch (TimeoutException e) {
       throw new ServiceException(e.getMessage());
     }
-    /*try {
-      future.get();
-      return successResponse();
-    } catch (InterruptedException | ExecutionException e) {
-      throw new ServiceException(e.getMessage());
-    }
-
-    try {
-      this.kafkaTemplate.send(topic, message);
-      logger.info("Sent data [{}] to topic:{}", ObjectMapperUtil.getJsonFromObj(data), topic);
-      return successResponse();
-    } catch (TimeoutException e) {
-      logger.error("Failed to send data");
-      throw new ServiceException(e.getMessage());
-    }*/
   }
 
   private CustomerResponse successResponse() {
