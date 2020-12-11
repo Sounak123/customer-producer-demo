@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[%-5level] %d{dd-MM-yyyy hh:mm:ss.SSS a} [%thread]
+				%logger{50} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="http"
+		class="com.splunk.logging.HttpEventCollectorLogbackAppender">
+		<url>http://127.0.0.1:8088/</url>
+		<token>4139c5df-7a35-402a-b586-3dc7a45e5a40</token>
+		<index>main</index>
+		<sourcetype>kafka-producer</sourcetype>
+		<disableCertificateValidation>true</disableCertificateValidation>
+		<batch_size_count>1</batch_size_count>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%msg</pattern>
+		</layout>
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="http" />
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
