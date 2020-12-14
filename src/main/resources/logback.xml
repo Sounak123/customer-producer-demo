@@ -10,8 +10,8 @@
 
 	<appender name="http"
 		class="com.splunk.logging.HttpEventCollectorLogbackAppender">
-		<url>http://127.0.0.1:8088/</url>
-		<token>4139c5df-7a35-402a-b586-3dc7a45e5a40</token>
+		<url>https://prd-p-rb2s8.splunkcloud.com:8088/</url>
+		<token>1cb401a1-1fcb-43e5-b47c-395359a83772</token>
 		<index>main</index>
 		<sourcetype>kafka-producer</sourcetype>
 		<disableCertificateValidation>true</disableCertificateValidation>
